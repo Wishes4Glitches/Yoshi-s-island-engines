@@ -11,7 +11,11 @@ public class PlayerPlatformerController : PhysicsObject
     public AudioSource audio;
     public AudioClip jump;
     public AudioClip coin;
+    public AudioClip morphing;
     //public FreeParallax parallax;
+
+    private bool Evolve;
+    private bool Evolve2;
 
     private SpriteRenderer spriteRenderer;
     private Animator animator;
@@ -77,6 +81,29 @@ public class PlayerPlatformerController : PhysicsObject
         if (other.gameObject.CompareTag("Coins"))
         { 
             audio.PlayOneShot(coin);
+            other.gameObject.SetActive(false);
+        }
+
+        if (other.gameObject.CompareTag("PowerUp"))
+        {
+
+            Evolve = true;
+            if (Evolve == true)
+            {
+                audio.PlayOneShot(morphing);
+                animator.SetBool("Car", Evolve);
+            }
+            other.gameObject.SetActive(false);
+        }
+
+        if (other.gameObject.CompareTag("PowerUpBig"))
+        {
+            Evolve2 = true;
+            if (Evolve2 == true)
+            {
+                audio.PlayOneShot(morphing);
+                animator.SetBool("Car", Evolve2);
+            }
             other.gameObject.SetActive(false);
         }
     }
