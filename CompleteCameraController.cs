@@ -8,7 +8,6 @@ public class CompleteCameraController : MonoBehaviour
     public Transform Yoshi;
     public Transform Followplatform;
 
-
     private Vector3 offset;         //Private variable to store the offset distance between the player and camera
 
 
@@ -24,6 +23,5 @@ public class CompleteCameraController : MonoBehaviour
     {
         // Set the position of the camera's transform to be the same as the player's, but offset by the calculated offset distance.
         transform.position = Yoshi.position + offset;
-        //Followplatform.position = new Vector3(Yoshi.position.x, 6.14f, -10f) + offset;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System;
 
 public class PlayerPlatformerController : PhysicsObject
@@ -8,6 +9,9 @@ public class PlayerPlatformerController : PhysicsObject
 
     public float maxSpeed = 7;
     public float jumpTakeOffSpeed = 7;
+    public float bounceSmall = 0;
+    public float bounceBig = 0;
+    public bool canDoubleJump;
     public AudioSource audio;
     public AudioClip jump;
     public AudioClip coin;
@@ -38,16 +42,30 @@ public class PlayerPlatformerController : PhysicsObject
         move.x = Input.GetAxis("Horizontal");
 
 
-        if (Input.GetButtonDown("Jump") && grounded)
+        if (Input.GetButtonDown("Jump"))
         {
-            audio.PlayOneShot(jump);
-            velocity.y = jumpTakeOffSpeed;
-        }
-        else if (Input.GetButtonUp("Jump"))
-        {
-            if (velocity.y > 0)
+            if (grounded)
             {
-                velocity.y = velocity.y * 0.5f;
+                audio.PlayOneShot(jump);
+                velocity.y = jumpTakeOffSpeed;
+                canDoubleJump = true;
+            }
+            else
+            {
+                if (canDoubleJump)
+                {
+                    audio.PlayOneShot(jump);
+                    canDoubleJump = false;
+                    velocity.y = jumpTakeOffSpeed;
+                }
+            }
+
+            if (Input.GetButtonUp("Jump"))
+            {
+                if (velocity.y > 0)
+                {
+                    velocity.y = velocity.y * 0.5f;
+                }
             }
         }
 
@@ -105,6 +123,26 @@ public class PlayerPlatformerController : PhysicsObject
                 animator.SetBool("Car", Evolve2);
             }
             other.gameObject.SetActive(false);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Small Arrow")
+        {
+            audio.PlayOneShot(jump);
+            velocity.y = 25;
+        }
+
+        if (collision.gameObject.tag == "Big Arrow")
+        {
+            audio.PlayOneShot(jump);
+            velocity.y = 40;
+        }
+
+        if (collision.gameObject.tag == "Win")
+        {
+            SceneManager.LoadScene("Game_Over");
         }
     }
 }
